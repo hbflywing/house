@@ -1,13 +1,18 @@
 package com.shawn.house.common;
 
+import lombok.Data;
+import lombok.ToString;
+
 /**
- * 查询房价首页
+ * 查询房价首页参数
  * Created by shawn.zeng on 2018/6/1.
  */
 
-public class IndexPage {
+@Data
+@ToString
+public class IndexPagePara {
 
-    private static final String url= "http://scxx.fgj.wuhan.gov.cn/xmqk.asp";
+    public static final String url= "http://scxx.fgj.wuhan.gov.cn/xmqk.asp";
 
     //行政区域
     private String domain;
@@ -19,4 +24,6 @@ public class IndexPage {
     private String prname;
     //还不知道
     private String Submit2222;
+    //当前页数
+    private Integer page=1;
 }
