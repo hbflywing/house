@@ -96,12 +96,30 @@ public class FetchUtil {
         return result;
     }
 
+    public static Price fetchPrice(String gid){
+        Document document = null;
+        Price price = new Price();
+        List<Room> result = new ArrayList<>();
+        try {
+            document =Jsoup.connect(PricePara.url+"?gid="+gid).timeout(30000).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Element elementSize = document.select("#form1 > div.container > table > tbody > tr:nth-child(3) > td:nth-child(3)").get(0);
+        Element elementPrice = document.select("#form1 > div.container > table > tbody > tr:nth-child(5) > td:nth-child(3) > img").get(0);
+        String size = elementSize.childNode(0).toString();
+        String priceurl = elementPrice.attr("src");
+        price.setCode(priceurl.split("=")[1]);
+        return null;
+    }
+
 
     public static void main(String[] args) {
+        System.setProperty("http.proxyHost", "127.0.0.1");
+        System.setProperty("https.proxyHost", "127.0.0.1");
+        System.setProperty("http.proxyPort", "8888");
+        System.setProperty("https.proxyPort", "8888");
         //5.asp?DengJh=洪1700673&HouseDengjh=洪0004242
-        List<Room> result =  fetchRoom("洪1700673","洪0004242");
-        for(Room room:result){
-            System.out.println(room);
-        }
+        TessUtil.decode("/I1dJ21FnhuAyXT9QHSvzQ==");
     }
 }
