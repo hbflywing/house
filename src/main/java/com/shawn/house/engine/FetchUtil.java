@@ -1,6 +1,7 @@
 package com.shawn.house.engine;
 
-import com.shawn.house.common.*;
+import com.shawn.house.engine.common.*;
+import com.shawn.house.web.entity.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,15 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FetchUtil {
+    public static Total total = new Total();
 
     //获取项目
-    public static List<Project> fetchProject(){
+    public static List<Project> fetchProject(Integer page){
         Document document = null;
         try {
-            document =Jsoup.connect(IndexPagePara.url).timeout(3000).get();
+            document =Jsoup.connect(IndexPagePara.url+(page==null?"":"?page="+page)).timeout(30000).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        String totalN = document.select("body > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(2) > font:nth-child(2)").get(0).childNode(0).toString();
+        Integer totalPage = (Integer.valueOf(totalN) + 19)/20;
+        total.setTotalNumber(Integer.valueOf(totalN));
+        total.setTotalPage(totalPage);
         Elements elements = document.select("body > table > tbody > tr > td:nth-child(2) > table > tbody > tr:nth-child(2) > " +
                 "td > table:nth-child(2) > tbody > tr > td > table > tbody > tr:nth-child(3) " +
                 "> td > table > tbody > tr > td > table:nth-child(2) > tbody").get(0).getElementsByTag("tr");
@@ -29,7 +35,7 @@ public class FetchUtil {
         List<Project> projects = new ArrayList<>();
         for(int i=2;i < elements.size();i++){
             Elements eles = elements.get(i).getElementsByTag("td");
-            String projectNo = eles.get(0).getElementsByTag("a").get(0).getElementsByTag("a").get(0).attr("href").substring(12).trim();
+            String projectNo = eles.get(0).getElementsByTag("a").get(0).getElementsByTag("a").get(0).attr("href").substring(13).trim();
             String projectName = eles.get(0).getElementsByTag("span").get(0).childNode(0).toString().trim();
             String totalNumber = eles.get(1).childNode(0).toString().replace("&nbsp;","").trim();
             String houseSaledNumber = eles.get(2).childNode(0).toString().replace("&nbsp;","").trim();
@@ -48,7 +54,8 @@ public class FetchUtil {
         Document document = null;
         List<Building> result = new ArrayList<>();
         try {
-            document =Jsoup.connect(BuildingPagePara.url+"?DengJh="+URLEncoder.encode(projectNo,"gb2312")).timeout(30000).get();
+
+            document =Jsoup.connect(BuildingPagePara.url+"?DengJh="+(projectNo.contains("~")?"%B3~"+projectNo.split("~")[1]:URLEncoder.encode(projectNo,"gbk"))).timeout(60000).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,13 +67,13 @@ public class FetchUtil {
             String buildingStructure = eles.get(1).childNode(0).toString().replace("&nbsp;","").trim();
             String totalFloor = eles.get(2).childNode(0).toString().replace("&nbsp;","").trim();
             String totalRoom = eles.get(3).childNode(0).toString().replace("&nbsp;","").trim();
-            Building building= Building.builder().buildingName(buildingName).buildingNo(buildingNo).buildingStructure(buildingStructure).totalFloor(totalFloor).totalRoom(totalRoom).build();
+            Building building= Building.builder().buildingName(buildingName).buildingNo(buildingNo).buildingStructure(buildingStructure).totalFloor(totalFloor).totalRoom(totalRoom).projectNo(projectNo).build();
             result.add(building);
         }
         return result;
     }
 
-    public static List<Room> fetchRoom(String projectNo,String buildingNo){
+    public static List<Room> fetchRoom(String projectNo, String buildingNo){
         Document document = null;
         List<Room> result = new ArrayList<>();
         try {

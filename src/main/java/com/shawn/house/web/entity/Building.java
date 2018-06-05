@@ -1,11 +1,17 @@
-package com.shawn.house.common;
+package com.shawn.house.web.entity;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
 
 @ToString
 @Builder
+@Data
 public class Building {
+
+    @Id
+    private String id;
 
     private String buildingName;
 
@@ -16,4 +22,6 @@ public class Building {
     private String totalFloor;
 
     private String totalRoom;
+
+    private String projectNo;
 }

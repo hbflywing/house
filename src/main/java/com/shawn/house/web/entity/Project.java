@@ -1,7 +1,8 @@
-package com.shawn.house.common;
+package com.shawn.house.web.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 /**
  * Created by shawn.zeng on 2018/6/1.
@@ -11,6 +12,8 @@ import lombok.Data;
 @Builder
 public class Project {
 
+    @Id
+    private String id;
     //项目名称
     private String projectName;
 

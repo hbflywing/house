@@ -1,4 +1,4 @@
-package com.shawn.house.common;
+package com.shawn.house.engine.common;
 
 import lombok.Data;
 
