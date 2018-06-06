@@ -12,8 +12,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class FetchUtil {
+public class FetchUtil{
     public static Total total = new Total();
 
     //获取项目
@@ -89,8 +90,8 @@ public class FetchUtil {
             String floor = elements.get(i).childNode(2).childNode(0).toString();
             for(int j=0;j<elements.get(i).childNodes().size()-3;j++){
                 String gids;
-                if(!StringUtils.isEmpty(elements.get(i).childNode(3+j).childNode(0).attr("href"))){
-                    gids = elements.get(i).childNode(3+j).childNode(0).attr("href").split("=")[1];
+                if(!StringUtils.isEmpty(elements.get(i).childNode(3+j).childNode(0).childNode(0).attr("href"))){
+                    gids = elements.get(i).childNode(3+j).childNode(0).childNode(0).attr("href").split("=")[1];
                 }else {
                     gids = "-";
                 }
@@ -127,6 +128,8 @@ public class FetchUtil {
         System.setProperty("http.proxyPort", "8888");
         System.setProperty("https.proxyPort", "8888");
         //5.asp?DengJh=洪1700673&HouseDengjh=洪0004242
-        TessUtil.decode("/I1dJ21FnhuAyXT9QHSvzQ==");
+        //TessUtil.decode("/I1dJ21FnhuAyXT9QHSvzQ==");
+
     }
+
 }

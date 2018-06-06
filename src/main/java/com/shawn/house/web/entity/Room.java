@@ -1,11 +1,13 @@
 package com.shawn.house.web.entity;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 @Builder
 @ToString
+@Data
 public class Room {
 
     @Id
