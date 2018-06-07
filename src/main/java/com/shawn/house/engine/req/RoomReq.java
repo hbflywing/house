@@ -17,7 +17,7 @@ public class RoomReq {
 
     private String houseDengJh;
 
-    Document getDocument() throws IOException {
+    public Document getDocument() throws IOException {
         if(StringUtils.isEmpty(dengJh)||StringUtils.isEmpty(houseDengJh)){
             return null;
         }else {
