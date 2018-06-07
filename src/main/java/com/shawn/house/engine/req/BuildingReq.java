@@ -21,14 +21,4 @@ public class BuildingReq {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        System.setProperty("http.proxyHost", "127.0.0.1");
-        System.setProperty("https.proxyHost", "127.0.0.1");
-        System.setProperty("http.proxyPort", "8888");
-        System.setProperty("https.proxyPort", "8888");
-        BuildingReq buildingReq = new BuildingReq();
-        buildingReq.setDengJh("黄1800294");
-        buildingReq.getDocument();
-    }
-
 }
