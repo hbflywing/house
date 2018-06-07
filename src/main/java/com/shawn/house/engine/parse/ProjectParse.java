@@ -30,7 +30,7 @@ public class ProjectParse {
                 if(tds.size() == 0){
                     continue;
                 }
-                projectEntity.setProjectCode(tds.get(0).childNode(0).attr("href").split("=")[1]);
+                projectEntity.setProjectCode(tds.get(0).childNode(0).attr("onclick").split("=")[1].split("'")[0]);
                 projectEntity.setProjectName(tds.get(0).childNode(0).childNode(0).toString().trim());
                 projectEntity.setTotal(tds.get(1).childNode(0).toString().trim());
                 projectEntity.setHouseSaled(tds.get(2).childNode(0).toString().trim());

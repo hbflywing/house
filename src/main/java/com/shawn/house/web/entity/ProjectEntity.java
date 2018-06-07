@@ -348,42 +348,13 @@ public class ProjectEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProjectEntity that = (ProjectEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(projectName, that.projectName) &&
-                Objects.equals(projectCode, that.projectCode) &&
-                Objects.equals(total, that.total) &&
-                Objects.equals(houseSaled, that.houseSaled) &&
-                Objects.equals(houseSaleable, that.houseSaleable) &&
-                Objects.equals(nohouseSaled, that.nohouseSaled) &&
-                Objects.equals(nohouseSaleable, that.nohouseSaleable) &&
-                Objects.equals(location, that.location) &&
-                Objects.equals(startWorkingTime, that.startWorkingTime) &&
-                Objects.equals(completionTime, that.completionTime) &&
-                Objects.equals(useArea, that.useArea) &&
-                Objects.equals(areaYear, that.areaYear) &&
-                Objects.equals(areaPurpose, that.areaPurpose) &&
-                Objects.equals(areaLevel, that.areaLevel) &&
-                Objects.equals(floorage, that.floorage) &&
-                Objects.equals(plotRatio, that.plotRatio) &&
-                Objects.equals(totalBuilding, that.totalBuilding) &&
-                Objects.equals(buildingAreaCode, that.buildingAreaCode) &&
-                Objects.equals(areaCode, that.areaCode) &&
-                Objects.equals(buildingDesignCode, that.buildingDesignCode) &&
-                Objects.equals(constructionCode, that.constructionCode) &&
-                Objects.equals(previousCode, that.previousCode) &&
-                Objects.equals(companyCode, that.companyCode) &&
-                Objects.equals(companyName, that.companyName) &&
-                Objects.equals(companyTel, that.companyTel) &&
-                Objects.equals(agentCompany, that.agentCompany) &&
-                Objects.equals(agentTel, that.agentTel) &&
-                Objects.equals(office, that.office) &&
-                Objects.equals(updateDate, that.updateDate);
+        return
+                Objects.equals(projectCode, that.projectCode);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, projectName, projectCode, total, houseSaled, houseSaleable, nohouseSaled, nohouseSaleable, location, startWorkingTime, completionTime, useArea, areaYear, areaPurpose, areaLevel, floorage, plotRatio, totalBuilding, buildingAreaCode, areaCode, buildingDesignCode, constructionCode, previousCode, companyCode, companyName, companyTel, agentCompany, agentTel, office, updateDate);
+        return Objects.hash(projectCode);
     }
 
     @Basic
