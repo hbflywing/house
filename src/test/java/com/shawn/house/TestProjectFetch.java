@@ -15,7 +15,7 @@ public class TestProjectFetch {
     public static void main(String[] args) throws IOException {
         ProjectReq projectReq = new ProjectReq();
         Document document = projectReq.getDocument();
-        ProjectParse.getPage(document);
+        System.out.println(ProjectParse.getPage(document));
 
         /*String str = "共 4843 条记录";
         Pattern p=Pattern.compile("共(.*?)条记录");

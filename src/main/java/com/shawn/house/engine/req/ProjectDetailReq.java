@@ -16,7 +16,7 @@ public class ProjectDetailReq {
 
     private String dengJh;
 
-    private Document getDocument() throws IOException{
+    public Document getDocument() throws IOException{
         return Jsoup.connect(url).data("dengJh",dengJh).timeout(60*1000).get();
     }
 }
