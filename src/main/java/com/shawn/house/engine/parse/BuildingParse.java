@@ -25,14 +25,19 @@ public class BuildingParse {
                 if(tds.get(0).getElementsByTag("a").size() ==0){
                     continue;
                 }else {
-                    BuildingEntity buildingEntity = new BuildingEntity();
-                    buildingEntity.setBuildingCode(tds.get(0).childNode(1).attr("onclick").split("=")[2].split("'")[0]);
-                    buildingEntity.setBuildingName(tds.get(0).childNode(1).childNode(0).toString());
-                    buildingEntity.setBuildingStructure(tds.get(1).childNode(0).toString());
-                    buildingEntity.setTotalFloor(tds.get(2).childNode(0).toString());
-                    buildingEntity.setTotalRoom(tds.get(3).childNode(0).toString());
-                    buildingEntity.setProjectCode(projectCode);
-                    buildingEntities.add(buildingEntity);
+                    try{
+                        BuildingEntity buildingEntity = new BuildingEntity();
+                        buildingEntity.setBuildingCode(tds.get(0).childNode(1).attr("onclick").split("=")[2].split("'")[0]);
+                        buildingEntity.setBuildingName(tds.get(0).childNode(1).childNode(0).toString());
+                        buildingEntity.setBuildingStructure(tds.get(1) != null?tds.get(1).childNode(0).toString():null);
+                        buildingEntity.setTotalFloor(tds.get(2).childNode(0).toString());
+                        buildingEntity.setTotalRoom(tds.get(3).childNode(0).toString());
+                        buildingEntity.setProjectCode(projectCode);
+                        buildingEntities.add(buildingEntity);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                 }
             }
             return  buildingEntities;

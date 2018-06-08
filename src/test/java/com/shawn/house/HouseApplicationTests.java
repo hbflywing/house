@@ -1,5 +1,6 @@
 package com.shawn.house;
 
+import com.shawn.house.job.BuildingJob;
 import com.shawn.house.job.ProjectJob;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +14,17 @@ public class HouseApplicationTests {
 
 	@Autowired
 	private ProjectJob projectJob;
+	@Autowired
+	private BuildingJob buildingJob;
 
 	@Test
 	public void contextLoads() {
 		projectJob.job();
+	}
+
+	@Test
+	public void contextLoadss() throws InterruptedException {
+		buildingJob.job();
 	}
 
 }
