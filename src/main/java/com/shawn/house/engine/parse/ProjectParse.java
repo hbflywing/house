@@ -30,13 +30,18 @@ public class ProjectParse {
                 if(tds.size() == 0){
                     continue;
                 }
-                projectEntity.setProjectCode(tds.get(0).childNode(0).attr("onclick").split("=")[1].split("'")[0]);
-                projectEntity.setProjectName(tds.get(0).childNode(0).childNode(0).toString().trim());
-                projectEntity.setTotal(tds.get(1).childNode(0).toString().trim());
-                projectEntity.setHouseSaled(tds.get(2).childNode(0).toString().trim());
-                projectEntity.setHouseSaleable(tds.get(3).childNode(0).toString().trim());
-                projectEntity.setNohouseSaled(tds.get(4).childNode(0).toString().trim());
-                projectEntity.setNohouseSaled(tds.get(5).childNode(0).toString().trim());
+                try{
+                    projectEntity.setProjectCode(tds.get(0).childNode(0).attr("onclick").split("=")[1].split("'")[0]);
+                    projectEntity.setProjectName(tds.get(0).childNode(0).childNode(0).toString().trim());
+                    projectEntity.setTotal(tds.get(1).childNode(0).toString().trim());
+                    projectEntity.setHouseSaled(tds.get(2).childNode(0).toString().trim());
+                    projectEntity.setHouseSaleable(tds.get(3).childNode(0).toString().trim());
+                    projectEntity.setNohouseSaled(tds.get(4).childNode(0).toString().trim());
+                    projectEntity.setNohouseSaled(tds.get(5).childNode(0).toString().trim());
+                }catch (Exception e){
+                    System.out.println("sss");
+                }
+
                 result.add(projectEntity);
             }
         }

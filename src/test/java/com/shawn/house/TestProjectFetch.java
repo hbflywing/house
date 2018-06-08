@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class TestProjectFetch {
     public static void main(String[] args) throws IOException {
         ProjectReq projectReq = new ProjectReq();
-        Document document = projectReq.getDocument();
+        Document document = projectReq.getDocument(null);
         System.out.println(ProjectParse.getPage(document));
 
         /*String str = "共 4843 条记录";

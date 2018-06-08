@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class ProjectReq {
     //当前页数
     private String pageNo;
 
-    public Document getDocument() throws IOException {
+    public Document getDocument(Proxy proxy) throws IOException {
         Map<String,String> hashMap = new HashMap();
         if(!StrUtils.isEmpty(shiqs)){
             hashMap.put("shiqs",shiqs);
@@ -46,6 +47,9 @@ public class ProjectReq {
         }
         if(!StrUtils.isEmpty(pageNo)){
             hashMap.put("pageNo",pageNo);
+        }
+        if(proxy != null){
+            return Jsoup.connect(url).data(hashMap).proxy(proxy).timeout(60*1000).post();
         }
         return Jsoup.connect(url).data(hashMap).timeout(60*1000).post();
     }
