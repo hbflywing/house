@@ -44,6 +44,7 @@ public class ProjectEntity {
     private String others;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Integer getId() {
         return id;

@@ -12,6 +12,7 @@ public class PageEntity {
     private Timestamp date;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Integer getId() {
         return id;
