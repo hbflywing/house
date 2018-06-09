@@ -12,7 +12,7 @@ import java.util.List;
  * Created by shawn.zeng on 2018/6/7.
  */
 public class RoomParse {
-    public static List<RoomEntity> parse(Document document,String buildingCode){
+    public static List<RoomEntity> parse(Document document, String buildingCode){
         Element table = document.select("body > div > div.w.seachBox > div > div > table > tbody").get(0);
         Elements trs = table.getElementsByTag("tr");
         List<RoomEntity> roomEntities = new ArrayList<>();

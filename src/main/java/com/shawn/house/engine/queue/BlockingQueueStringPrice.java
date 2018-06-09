@@ -1,27 +1,26 @@
 package com.shawn.house.engine.queue;
 
-import com.shawn.house.engine.parse.PriceParse;
 import com.shawn.house.engine.queue.common.*;
-import com.shawn.house.engine.req.PriceReq;
+import com.shawn.house.engine.util.TessUtil;
 import com.shawn.house.web.dao.RoomJPA;
 import com.shawn.house.web.entity.RoomEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
+
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by shawn.zeng on 2018/6/9.
  */
 @Service
-public class BlockingQueueRoom implements Model{
-
+public class BlockingQueueStringPrice implements Model {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private final BlockingQueue<RoomEntity> queue = new LinkedBlockingQueue<>(1000);
@@ -32,53 +31,38 @@ public class BlockingQueueRoom implements Model{
 
     @Override
     public Runnable newRunnableConsumer() {
-        return new ConsumerImpl();
+        return new BlockingQueueStringPrice.ConsumerImpl();
     }
     @Override
     public Runnable newRunnableProducer() {
-        return new ProducerImpl();
+        return new BlockingQueueStringPrice.ProducerImpl();
     }
-
 
     private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable {
         @Override
         public void consume() throws InterruptedException {
-            logger.info("开始采集价格");
+            logger.info("start String price");
             RoomEntity roomEntity = queue.take();
-            PriceReq priceReq = new PriceReq();
-            priceReq.setGid(roomEntity.getRoomCode());
-            RoomEntity priceRoomEntity = new RoomEntity();
-            try {
-                priceRoomEntity = PriceParse.parse(priceReq.getDocument());
-                TimeUnit.SECONDS.sleep(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-                queue.put(roomEntity);
-            }
-            if(priceRoomEntity != null){
-                roomEntity.setPreviousArea(priceRoomEntity.getPreviousArea());
-                roomEntity.setActualArea(priceRoomEntity.getActualArea());
-                roomEntity.setPrice(priceRoomEntity.getPrice());
-                roomJPA.save(roomEntity);
-                logger.info("price fetch success "+priceRoomEntity.toString());
-            }
+            String priceString = TessUtil.decode(roomEntity);
+            roomJPA.save(roomEntity);
+            logger.info(priceString);
+            TimeUnit.SECONDS.sleep(1);
         }
     }
     private class ProducerImpl extends AbstractProducer implements Producer, Runnable {
         @Override
         public void produce() throws InterruptedException {
-            Page<RoomEntity> page = roomJPA.findByRoomCodeNotAndPrice("00000000-0000-0000-0000-000000000000","",new PageRequest(0,1000));
-            List<RoomEntity> roomEntityList = page.getContent();
-            do {
-                roomEntityList.stream().forEach(a-> {
+            Page<RoomEntity> page = roomJPA.findByPriceNot("",new PageRequest(0,1000));
+            List<RoomEntity> rooms = page.getContent();
+            do{
+                rooms.stream().forEach(a-> {
                     try {
                         queue.put(a);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 });
-                page = roomJPA.findByRoomCodeNotAndPrice("00000000-0000-0000-0000-000000000000","",page.nextPageable());
-            }while(page.hasNext());
+            }while (page.hasNext());
             boolean flag = true;
             while(flag ){
                 if(queue.size() == 0){
@@ -88,5 +72,4 @@ public class BlockingQueueRoom implements Model{
             }
         }
     }
-
 }

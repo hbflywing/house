@@ -82,6 +82,17 @@ public class BlockingQueueBuilding implements Model {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                boolean flag = true;
+                while(flag ){
+                    if(queue.size() == 0){
+                        flag = false;
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(5);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
         }
     }

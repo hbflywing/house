@@ -1,27 +1,28 @@
 package com.shawn.house.engine.util;
 
+import com.shawn.house.web.entity.RoomEntity;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Base64;
 
 public class TessUtil {
     private static ITesseract tesseract = new Tesseract();
 
-    public static final String url="http://202.103.39.36/GetHouseInfo.ashx?price=";
+    public static final String url="http://119.97.201.28:6081/GetHouseInfo.ashx?price=";
 
     private TessUtil(){}
 
-    public static String decode(String code){
+    public static String decode(RoomEntity roomEntity){
         try {
-            Connection.Response response = Jsoup.connect(url+code).execute();
+            Connection.Response response = Jsoup.connect(url+roomEntity.getPrice()).execute();
             byte[] bytes = response.bodyAsBytes();
-            File file = new File("E:\\temp"+File.separator+ Base64.getEncoder().encodeToString(code.getBytes())+".jpg");
+            roomEntity.setPriceByte(bytes);
+            File file = new File("E:\\temp"+File.separator+ Base64.getEncoder().encodeToString(roomEntity.getPrice().getBytes())+".jpg");
             if(!file.exists()){
                 file.createNewFile();
             }
@@ -30,6 +31,7 @@ public class TessUtil {
             bufferedOutput.write(bytes);
             bufferedOutput.flush();
             String str = tesseract.doOCR(file);
+            roomEntity.setPriceString(str);
             System.out.println(str);
         } catch (IOException e) {
             e.printStackTrace();

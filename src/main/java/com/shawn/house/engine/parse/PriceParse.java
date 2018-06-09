@@ -3,7 +3,6 @@ package com.shawn.house.engine.parse;
 import com.shawn.house.web.entity.RoomEntity;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -16,8 +15,8 @@ public class PriceParse {
         Element previousArea = document.select("#form1 > div.container > table > tbody > tr:nth-child(3) > td:nth-child(3)").get(0);
         Element actualArea = document.select("#form1 > div.container > table > tbody > tr:nth-child(4) > td:nth-child(3)").get(0);
         Element price = document.select("#form1 > div.container > table > tbody > tr:nth-child(5) > td:nth-child(3) > img").get(0);
-        roomEntity.setPreviousArea(previousArea.childNode(0).toString());
-        roomEntity.setActualArea(actualArea.childNode(0).toString());
+        roomEntity.setPreviousArea(previousArea.childNodes().size() ==1?previousArea.childNode(0).toString():null);
+        roomEntity.setActualArea(actualArea.childNodes().size() == 1?actualArea.childNode(0).toString():null);
         roomEntity.setPrice(price.attr("src").split("price=")[1]);
         return roomEntity;
     }

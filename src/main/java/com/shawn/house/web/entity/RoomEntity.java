@@ -1,13 +1,16 @@
 package com.shawn.house.web.entity;
 
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
 /**
- * Created by shawn.zeng on 2018/6/6.
+ * Created by shawn.zeng on 2018/6/9.
  */
 @Entity
+@ToString
 @Table(name = "room", schema = "house", catalog = "")
 public class RoomEntity {
     private Integer id;
@@ -22,11 +25,12 @@ public class RoomEntity {
     private String actualArea;
     private String price;
     private byte[] priceByte;
+    private String priceString;
     private Timestamp updateDate;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
     }
@@ -145,6 +149,26 @@ public class RoomEntity {
         this.priceByte = priceByte;
     }
 
+    @Basic
+    @Column(name = "price_string")
+    public String getPriceString() {
+        return priceString;
+    }
+
+    public void setPriceString(String priceString) {
+        this.priceString = priceString;
+    }
+
+    @Basic
+    @Column(name = "update_date")
+    public Timestamp getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Timestamp updateDate) {
+        this.updateDate = updateDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -152,7 +176,7 @@ public class RoomEntity {
 
         RoomEntity that = (RoomEntity) o;
 
-        if (id != that.id) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (buildingNo != null ? !buildingNo.equals(that.buildingNo) : that.buildingNo != null) return false;
         if (unit != null ? !unit.equals(that.unit) : that.unit != null) return false;
         if (floor != null ? !floor.equals(that.floor) : that.floor != null) return false;
@@ -164,13 +188,15 @@ public class RoomEntity {
         if (actualArea != null ? !actualArea.equals(that.actualArea) : that.actualArea != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (!Arrays.equals(priceByte, that.priceByte)) return false;
+        if (priceString != null ? !priceString.equals(that.priceString) : that.priceString != null) return false;
+        if (updateDate != null ? !updateDate.equals(that.updateDate) : that.updateDate != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (buildingNo != null ? buildingNo.hashCode() : 0);
         result = 31 * result + (unit != null ? unit.hashCode() : 0);
         result = 31 * result + (floor != null ? floor.hashCode() : 0);
@@ -182,16 +208,8 @@ public class RoomEntity {
         result = 31 * result + (actualArea != null ? actualArea.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(priceByte);
+        result = 31 * result + (priceString != null ? priceString.hashCode() : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
         return result;
-    }
-
-    @Basic
-    @Column(name = "update_date")
-    public Timestamp getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Timestamp updateDate) {
-        this.updateDate = updateDate;
     }
 }

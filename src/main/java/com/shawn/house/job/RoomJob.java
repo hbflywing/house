@@ -1,6 +1,8 @@
 package com.shawn.house.job;
 
 import com.shawn.house.engine.parse.RoomParse;
+import com.shawn.house.engine.queue.BlockingQueueRoom;
+import com.shawn.house.engine.queue.BlockingQueueStringPrice;
 import com.shawn.house.engine.req.RoomReq;
 import com.shawn.house.web.dao.BuildingJPA;
 import com.shawn.house.web.dao.RoomJPA;
@@ -27,6 +29,12 @@ public class RoomJob {
 
     @Autowired
     private BuildingJPA buildingJPA;
+
+    @Autowired
+    private BlockingQueueRoom blockingQueueRoom;
+
+    @Autowired
+    private BlockingQueueStringPrice blockingQueueStringPrice;
 
     public void job() throws IOException, InterruptedException {
         List<BuildingEntity> buildingEntities = buildingJPA.findAll();
@@ -59,5 +67,15 @@ public class RoomJob {
                 TimeUnit.SECONDS.sleep(2);
             }
         }
+    }
+
+    public void job1(){
+        new Thread(blockingQueueRoom.newRunnableProducer()).start();
+        new Thread(blockingQueueRoom.newRunnableConsumer()).start();
+    }
+
+    public void job2(){
+        new Thread(blockingQueueStringPrice.newRunnableProducer()).start();
+        new Thread(blockingQueueStringPrice.newRunnableConsumer()).start();
     }
 }
