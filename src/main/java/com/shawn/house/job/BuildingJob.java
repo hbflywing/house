@@ -1,6 +1,7 @@
 package com.shawn.house.job;
 
 import com.shawn.house.engine.parse.BuildingParse;
+import com.shawn.house.engine.queue.BlockingQueueBuilding;
 import com.shawn.house.engine.req.BuildingReq;
 import com.shawn.house.web.dao.BuildingJPA;
 import com.shawn.house.web.dao.ProjectJPA;
@@ -28,6 +29,9 @@ public class BuildingJob {
 
     @Autowired
     private ProjectJPA projectJPA;
+
+    @Autowired
+    private BlockingQueueBuilding blockingQueueBuilding;
 
     public void job() throws InterruptedException {
 
@@ -66,4 +70,10 @@ public class BuildingJob {
             }
         }
     }
+
+    public void job1(){
+        new Thread(blockingQueueBuilding.newRunnableConsumer()).start();
+        new Thread(blockingQueueBuilding.newRunnableProducer()).start();
+    }
+
 }
