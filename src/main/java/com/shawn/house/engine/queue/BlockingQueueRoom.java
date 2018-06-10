@@ -43,33 +43,30 @@ public class BlockingQueueRoom implements Model{
     private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable {
         @Override
         public void consume() throws InterruptedException {
-            logger.info("开始采集价格");
+
             RoomEntity roomEntity = queue.take();
             PriceReq priceReq = new PriceReq();
             priceReq.setGid(roomEntity.getRoomCode());
-            RoomEntity priceRoomEntity = new RoomEntity();
-            try {
-                priceRoomEntity = PriceParse.parse(priceReq.getDocument());
-                TimeUnit.SECONDS.sleep(1);
-            } catch (IOException e) {
-                e.printStackTrace();
-                queue.put(roomEntity);
-            }
+            logger.info("start fetch room id = "+roomEntity.getId()+" price code ");
+            RoomEntity priceRoomEntity;
+            priceRoomEntity = PriceParse.parse(priceReq.getDocument());
+            logger.info("start fetch room id = "+roomEntity.getId()+" price code success ");
             if(priceRoomEntity != null){
                 roomEntity.setPreviousArea(priceRoomEntity.getPreviousArea());
                 roomEntity.setActualArea(priceRoomEntity.getActualArea());
                 roomEntity.setPrice(priceRoomEntity.getPrice());
                 roomJPA.save(roomEntity);
-                logger.info("price fetch success "+priceRoomEntity.toString());
+                logger.info("price fetch success "+roomEntity.toString());
             }
+            TimeUnit.SECONDS.sleep(1);
         }
     }
     private class ProducerImpl extends AbstractProducer implements Producer, Runnable {
         @Override
         public void produce() throws InterruptedException {
             Page<RoomEntity> page = roomJPA.findByRoomCodeNotAndPrice("00000000-0000-0000-0000-000000000000","",new PageRequest(0,1000));
-            List<RoomEntity> roomEntityList = page.getContent();
             do {
+                List<RoomEntity> roomEntityList = page.getContent();
                 roomEntityList.stream().forEach(a-> {
                     try {
                         queue.put(a);

@@ -11,8 +11,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 public class ApplicationStartup implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        //contextRefreshedEvent.getApplicationContext().getBean(BuildingJob.class).job1();
-        //contextRefreshedEvent.getApplicationContext().getBean(RoomJob.class).job1();
+        contextRefreshedEvent.getApplicationContext().getBean(BuildingJob.class).job1();
+        contextRefreshedEvent.getApplicationContext().getBean(RoomJob.class).job1();
         contextRefreshedEvent.getApplicationContext().getBean(RoomJob.class).job2();
     }
 }

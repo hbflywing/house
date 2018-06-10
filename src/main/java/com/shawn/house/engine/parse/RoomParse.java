@@ -22,6 +22,9 @@ public class RoomParse {
                 continue;
             }else {
                 String buidingNo = tds.get(0).childNode(0).toString().trim();
+                if(buidingNo.equals("没有找到您要的数据")){
+                    break;
+                }
                 String unit = tds.get(1).childNode(0).toString().trim();
                 String floor = tds.get(2).childNode(0).toString().trim();
                 for(int j=3;j<tds.size();j++){

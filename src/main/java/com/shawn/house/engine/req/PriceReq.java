@@ -15,11 +15,16 @@ public class PriceReq {
 
     private String gid;
 
-    public Document getDocument() throws IOException {
+    public Document getDocument() {
         if(StringUtils.isEmpty(gid)){
             return null;
         }else {
-            return Jsoup.connect(url).data("gid",gid).timeout(60*1000).get();
+            try {
+                return Jsoup.connect(url).data("gid",gid).timeout(60*1000).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }

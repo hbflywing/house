@@ -1,6 +1,7 @@
 package com.shawn.house.engine.queue;
 
 import com.shawn.house.engine.queue.common.*;
+import com.shawn.house.engine.util.BaiduApiUtil;
 import com.shawn.house.engine.util.TessUtil;
 import com.shawn.house.web.dao.RoomJPA;
 import com.shawn.house.web.entity.RoomEntity;
@@ -43,7 +44,7 @@ public class BlockingQueueStringPrice implements Model {
         public void consume() throws InterruptedException {
             logger.info("start String price");
             RoomEntity roomEntity = queue.take();
-            String priceString = TessUtil.decode(roomEntity);
+            String priceString = BaiduApiUtil.decode(roomEntity);
             roomJPA.save(roomEntity);
             logger.info(priceString);
             TimeUnit.SECONDS.sleep(1);
@@ -53,8 +54,8 @@ public class BlockingQueueStringPrice implements Model {
         @Override
         public void produce() throws InterruptedException {
             Page<RoomEntity> page = roomJPA.findByPriceNot("",new PageRequest(0,1000));
-            List<RoomEntity> rooms = page.getContent();
             do{
+                List<RoomEntity> rooms = page.getContent();
                 rooms.stream().forEach(a-> {
                     try {
                         queue.put(a);
@@ -62,6 +63,7 @@ public class BlockingQueueStringPrice implements Model {
                         e.printStackTrace();
                     }
                 });
+                page = roomJPA.findByPriceNot("",page.nextPageable());
             }while (page.hasNext());
             boolean flag = true;
             while(flag ){

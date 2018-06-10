@@ -13,7 +13,7 @@ public class TestTess {
 
     public static void main(String[] args) throws TesseractException {
         ITesseract tesseract = new Tesseract();
-        File file = new File("E:\\temp\\NGF5R3UzaFFUVWU4S0dTZWZTaklFZz09.jpeg");
+        File file = new File("E:\\temp\\NTNUUzVHdEVJME1rcXJ0QkxHeUhsdz09.jpg");
         String str = tesseract.doOCR(file);
         System.out.println(str);
     }

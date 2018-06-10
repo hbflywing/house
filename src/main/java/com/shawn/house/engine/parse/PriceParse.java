@@ -10,7 +10,10 @@ import java.io.IOException;
  * Created by shawn.zeng on 2018/6/7.
  */
 public class PriceParse {
-    public static RoomEntity parse(Document document) throws IOException {
+    public static RoomEntity parse(Document document){
+        if(document == null){
+            return null;
+        }
         RoomEntity roomEntity = new RoomEntity();
         Element previousArea = document.select("#form1 > div.container > table > tbody > tr:nth-child(3) > td:nth-child(3)").get(0);
         Element actualArea = document.select("#form1 > div.container > table > tbody > tr:nth-child(4) > td:nth-child(3)").get(0);
