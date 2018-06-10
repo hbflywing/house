@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.ToString;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.HashMap;
@@ -18,6 +21,8 @@ import java.util.Map;
 @Data
 @ToString
 public class ProjectReq {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
     //post请求
     public static String url= "http://fgj.wuhan.gov.cn/zz_spfxmcx_index.jspx";
     //行政区域
@@ -31,8 +36,8 @@ public class ProjectReq {
     //当前页数
     private String pageNo;
 
-    public Document getDocument(Proxy proxy) throws IOException {
-        Map<String,String> hashMap = new HashMap();
+    public Document getDocument(Proxy proxy){
+        Map<String,String> hashMap = new HashMap<>();
         if(!StrUtils.isEmpty(shiqs)){
             hashMap.put("shiqs",shiqs);
         }
@@ -49,9 +54,18 @@ public class ProjectReq {
             hashMap.put("pageNo",pageNo);
         }
         if(proxy != null){
-            return Jsoup.connect(url).data(hashMap).proxy(proxy).timeout(60*1000).post();
+            try {
+                return Jsoup.connect(url).data(hashMap).proxy(proxy).timeout(60*1000).post();
+            } catch (IOException e) {
+                logger.error("fetch project err! page = "+pageNo);
+                return null;
+            }
         }
-        return Jsoup.connect(url).data(hashMap).timeout(60*1000).post();
+        try {
+            return Jsoup.connect(url).data(hashMap).timeout(60*1000).post();
+        } catch (IOException e) {
+            logger.error("fetch project err! page = "+pageNo);
+            return null;
+        }
     }
-
 }

@@ -5,6 +5,7 @@ import com.shawn.house.engine.util.BaiduApiUtil;
 import com.shawn.house.engine.util.TessUtil;
 import com.shawn.house.web.dao.RoomJPA;
 import com.shawn.house.web.entity.RoomEntity;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,11 @@ import java.util.concurrent.TimeUnit;
 public class BlockingQueueStringPrice implements Model {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final PageRequest pageRequest = new PageRequest(0,1000);
+
     private final BlockingQueue<RoomEntity> queue = new LinkedBlockingQueue<>(1000);
+
+    private static final String EMPTY_STRING = "";
 
     @Autowired
     private RoomJPA roomJPA;
@@ -44,26 +49,28 @@ public class BlockingQueueStringPrice implements Model {
         public void consume() throws InterruptedException {
             logger.info("start String price");
             RoomEntity roomEntity = queue.take();
-            String priceString = BaiduApiUtil.decode(roomEntity);
+            BaiduApiUtil.decode(roomEntity);
             roomJPA.save(roomEntity);
-            logger.info(priceString);
             TimeUnit.SECONDS.sleep(1);
         }
     }
     private class ProducerImpl extends AbstractProducer implements Producer, Runnable {
         @Override
         public void produce() throws InterruptedException {
-            Page<RoomEntity> page = roomJPA.findByPriceNot("",new PageRequest(0,1000));
+            logger.info("start process room string price");
+            Page<RoomEntity> page = roomJPA.findByPriceNot(EMPTY_STRING,pageRequest);
+            if(CollectionUtils.isEmpty(page.getContent())){
+                logger.info("no room need to fetch string price");
+                TimeUnit.HOURS.sleep(1);
+                return;
+            }
+
             do{
                 List<RoomEntity> rooms = page.getContent();
-                rooms.stream().forEach(a-> {
-                    try {
-                        queue.put(a);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-                page = roomJPA.findByPriceNot("",page.nextPageable());
+                for(RoomEntity roomEntity:rooms){
+                    queue.put(roomEntity);
+                }
+                page = roomJPA.findByPriceNot(EMPTY_STRING,page.nextPageable());
             }while (page.hasNext());
             boolean flag = true;
             while(flag ){

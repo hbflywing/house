@@ -55,11 +55,7 @@ public class BuildingJob {
                 BuildingReq buildingReq = new BuildingReq();
                 buildingReq.setDengJh(projectEntity.getProjectCode());
                 List<BuildingEntity> buildingEntityList = new ArrayList<>();
-                try{
-                    buildingEntityList = BuildingParse.parse(buildingReq.getDocument(),projectEntity.getProjectCode());
-                }catch (IOException e) {
-                    e.printStackTrace();
-                }
+                buildingEntityList = BuildingParse.parse(buildingReq.getDocument(),projectEntity.getProjectCode());
                 if(CollectionUtils.isNotEmpty(buildingEntityList)){
                     buildingJPA.saveAll(buildingEntityList);
                     System.out.println(projectEntity.getProjectCode()+"楼栋抓取成功");

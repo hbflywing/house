@@ -46,24 +46,17 @@ public class BlockingQueueBuilding implements Model {
 
     private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable {
         @Override
-        public void consume() throws InterruptedException, IOException {
+        public void consume() throws InterruptedException{
             BuildingEntity buildingEntity = queue.take();
             //在队列中获取一个building然后去抓取他的room
             RoomReq roomReq = new RoomReq();
             roomReq.setDengJh(buildingEntity.getProjectCode());
             roomReq.setHouseDengJh(buildingEntity.getBuildingCode());
-            List<RoomEntity> result = null;
-            try {
-
-                 result = RoomParse.parse(roomReq.getDocument(),buildingEntity.getBuildingCode());
-            }catch (IOException exception){
-                //如果发生异常就将他放到队列尾部
-                logger.info(buildingEntity.getBuildingCode()+" fetch error");
-                queue.put(buildingEntity);
-            }
+            List<RoomEntity> result;
+            result = RoomParse.parse(roomReq.getDocument(),buildingEntity.getBuildingCode());
             if(CollectionUtils.isNotEmpty(result)){
                 roomJPA.saveAll(result);
-                System.out.println(buildingEntity.getProjectCode()+"     "+buildingEntity.getBuildingCode()+"房间已经保存成功");
+                logger.info(buildingEntity.getProjectCode()+"     "+buildingEntity.getBuildingCode()+" all room saved!");
             }
             //休眠一秒钟
             TimeUnit.SECONDS.sleep(1);
@@ -73,27 +66,34 @@ public class BlockingQueueBuilding implements Model {
 
     private class ProducerImpl extends AbstractProducer implements Producer, Runnable {
         @Override
-        public void produce() {
+        public void produce() throws InterruptedException {
+            logger.info("check all buildings need to fetch rooms");
             List<BuildingEntity> buildingEntities = buildingJPA.queryBuildingEntitiesByNoRoom();
-            buildingEntities.stream().forEach(a-> {
+            if(CollectionUtils.isEmpty(buildingEntities)){
+                logger.info("no buildings need to fetch rooms");
+                TimeUnit.HOURS.sleep(1);
+                return;
+            }
+            logger.info("there are "+buildingEntities.size()+"to fetch");
+            logger.info("start to push building process queue");
+            for(BuildingEntity buildingEntity:buildingEntities){
+                queue.put(buildingEntity);
+                logger.info(buildingEntity.getBuildingCode()+" push into queue to fetch ");
+            }
+            logger.info("all building int process queue");
+            boolean flag = true;
+            while(flag ){
+                if(queue.size() == 0){
+                    flag = false;
+                    logger.info("find all building fetch room haved bean process");
+                }
                 try {
-                    queue.put(a);
-                    logger.info(a.getBuildingCode()+" push into queue to fetch ");
+                    TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                boolean flag = true;
-                while(flag ){
-                    if(queue.size() == 0){
-                        flag = false;
-                    }
-                    try {
-                        TimeUnit.SECONDS.sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            }
+
         }
     }
 }

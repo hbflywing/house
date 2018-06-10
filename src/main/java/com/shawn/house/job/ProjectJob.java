@@ -32,11 +32,7 @@ public class ProjectJob {
         List<ProjectEntity> projectEntityList = projectJPA.findAll();
         ProjectReq projectReq = new ProjectReq();
         Document document = null;
-        try {
-            document = projectReq.getDocument(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        document = projectReq.getDocument(null);
         List<ProjectEntity> projectEntities = ProjectParse.parse(document);
         projectEntities.removeAll(projectEntityList);
         if(CollectionUtils.isNotEmpty(projectEntities)){
@@ -50,9 +46,7 @@ public class ProjectJob {
                 document = projectReq.getDocument(null);
                 System.out.println("获取第"+i+"页数据成功");
                 TimeUnit.SECONDS.sleep(2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            }  catch (InterruptedException e) {
                 e.printStackTrace();
             }
             projectEntities = ProjectParse.parse(document);

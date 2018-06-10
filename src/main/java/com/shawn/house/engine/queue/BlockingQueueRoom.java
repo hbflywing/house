@@ -5,6 +5,7 @@ import com.shawn.house.engine.queue.common.*;
 import com.shawn.house.engine.req.PriceReq;
 import com.shawn.house.web.dao.RoomJPA;
 import com.shawn.house.web.entity.RoomEntity;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,12 @@ import java.util.concurrent.TimeUnit;
 public class BlockingQueueRoom implements Model{
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final String NOT_FRICE_CODE = "00000000-0000-0000-0000-000000000000";
+
+    private static final String EMPTY_STRING = "";
+
+    private static final PageRequest pageRequest = new PageRequest(0,1000);
 
     private final BlockingQueue<RoomEntity> queue = new LinkedBlockingQueue<>(1000);
 
@@ -64,18 +71,22 @@ public class BlockingQueueRoom implements Model{
     private class ProducerImpl extends AbstractProducer implements Producer, Runnable {
         @Override
         public void produce() throws InterruptedException {
-            Page<RoomEntity> page = roomJPA.findByRoomCodeNotAndPrice("00000000-0000-0000-0000-000000000000","",new PageRequest(0,1000));
+            logger.info("start find all Room need to fetch price");
+            Page<RoomEntity> page = roomJPA.findByRoomCodeNotAndPrice(NOT_FRICE_CODE,EMPTY_STRING,pageRequest);
+            if(CollectionUtils.isEmpty(page.getContent())){
+                logger.info("no room need to fetch price");
+                TimeUnit.HOURS.sleep(1);
+                return;
+            }
+
             do {
                 List<RoomEntity> roomEntityList = page.getContent();
-                roomEntityList.stream().forEach(a-> {
-                    try {
-                        queue.put(a);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-                page = roomJPA.findByRoomCodeNotAndPrice("00000000-0000-0000-0000-000000000000","",page.nextPageable());
-            }while(page.hasNext());
+                for(RoomEntity roomEntity:roomEntityList){
+                    logger.info("push room id = "+roomEntity.getId()+" to fetch price");
+                    queue.put(roomEntity);
+                }
+                page = roomJPA.findByRoomCodeNotAndPrice(NOT_FRICE_CODE,EMPTY_STRING,page.nextPageable());
+            } while (page.hasNext());
             boolean flag = true;
             while(flag ){
                 if(queue.size() == 0){
