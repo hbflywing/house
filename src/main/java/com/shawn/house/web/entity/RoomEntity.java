@@ -1,16 +1,13 @@
 package com.shawn.house.web.entity;
 
-import lombok.ToString;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
 /**
- * Created by shawn.zeng on 2018/6/9.
+ * Created by shawn.zeng on 2018/6/10.
  */
 @Entity
-@ToString
 @Table(name = "room", schema = "house", catalog = "")
 public class RoomEntity {
     private Integer id;
@@ -26,11 +23,14 @@ public class RoomEntity {
     private String price;
     private byte[] priceByte;
     private String priceString;
+    @Transient
     private Timestamp updateDate;
+    @Transient
+    private Timestamp createDate;
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Integer getId() {
         return id;
     }
@@ -169,6 +169,16 @@ public class RoomEntity {
         this.updateDate = updateDate;
     }
 
+    @Basic
+    @Column(name = "create_date")
+    public Timestamp getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -190,6 +200,7 @@ public class RoomEntity {
         if (!Arrays.equals(priceByte, that.priceByte)) return false;
         if (priceString != null ? !priceString.equals(that.priceString) : that.priceString != null) return false;
         if (updateDate != null ? !updateDate.equals(that.updateDate) : that.updateDate != null) return false;
+        if (createDate != null ? !createDate.equals(that.createDate) : that.createDate != null) return false;
 
         return true;
     }
@@ -210,6 +221,7 @@ public class RoomEntity {
         result = 31 * result + Arrays.hashCode(priceByte);
         result = 31 * result + (priceString != null ? priceString.hashCode() : 0);
         result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         return result;
     }
 }

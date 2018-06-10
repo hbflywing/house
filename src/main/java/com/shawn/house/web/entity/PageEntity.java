@@ -2,8 +2,10 @@ package com.shawn.house.web.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
+/**
+ * Created by shawn.zeng on 2018/6/10.
+ */
 @Entity
 @Table(name = "page", schema = "house", catalog = "")
 public class PageEntity {
@@ -46,15 +48,21 @@ public class PageEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         PageEntity that = (PageEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(projectCount, that.projectCount) &&
-                Objects.equals(date, that.date);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (projectCount != null ? !projectCount.equals(that.projectCount) : that.projectCount != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+
+        return true;
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, projectCount, date);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (projectCount != null ? projectCount.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        return result;
     }
 }

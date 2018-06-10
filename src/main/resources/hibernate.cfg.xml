@@ -9,6 +9,10 @@
       <mapping class="com.shawn.house.proxy.domain.IpPoolEntity"/>
     <mapping class="com.shawn.house.web.entity.RoomEntity"/>
       <mapping class="com.shawn.house.web.entity.PriceEntity"/>
+      <mapping class="com.shawn.house.web.entity.BuildingEntity"/>
+      <mapping class="com.shawn.house.web.entity.IpPoolEntity"/>
+      <mapping class="com.shawn.house.web.entity.PageEntity"/>
+      <mapping class="com.shawn.house.web.entity.ProjectEntity"/>
       <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 

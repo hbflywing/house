@@ -13,8 +13,8 @@ public class PriceEntity {
     private String stringPrice;
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Integer getId() {
         return id;
     }
