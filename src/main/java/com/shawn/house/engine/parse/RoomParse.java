@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class RoomParse {
     public static List<RoomEntity> parse(Document document, String buildingCode){
+        if(document.select("body > div > div.w.seachBox > div > div > table > tbody")==null){
+            return null;
+        }
         Element table = document.select("body > div > div.w.seachBox > div > div > table > tbody").get(0);
         Elements trs = table.getElementsByTag("tr");
         List<RoomEntity> roomEntities = new ArrayList<>();
