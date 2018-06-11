@@ -64,6 +64,11 @@ public class BlockingQueueRoom implements Model{
                 roomEntity.setPrice(priceRoomEntity.getPrice());
                 roomJPA.save(roomEntity);
                 logger.info("price fetch success "+roomEntity.toString());
+            }else{
+                roomEntity.setRoomCode(NOT_FRICE_CODE);
+                roomEntity.setPrice(EMPTY_STRING);
+                roomJPA.save(roomEntity);
+                logger.info("fetch price by romm code err! reset room code! room id = "+roomEntity.getId());
             }
             TimeUnit.SECONDS.sleep(1);
         }

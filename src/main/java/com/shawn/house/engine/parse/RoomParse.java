@@ -4,6 +4,8 @@ import com.shawn.house.web.entity.RoomEntity;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +14,12 @@ import java.util.List;
  * Created by shawn.zeng on 2018/6/7.
  */
 public class RoomParse {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     public static List<RoomEntity> parse(Document document, String buildingCode){
         if(document.select("body > div > div.w.seachBox > div > div > table > tbody")==null){
+            LoggerFactory.getLogger(Thread.currentThread().getName()).info(buildingCode+" can find room list");
             return null;
         }
         Element table = document.select("body > div > div.w.seachBox > div > div > table > tbody").get(0);
@@ -26,6 +32,7 @@ public class RoomParse {
             }else {
                 String buidingNo = tds.get(0).childNode(0).toString().trim();
                 if(buidingNo.equals("没有找到您要的数据")){
+                    LoggerFactory.getLogger(Thread.currentThread().getName()).info(buildingCode+" can find room list");
                     break;
                 }
                 String unit = tds.get(1).childNode(0).toString().trim();

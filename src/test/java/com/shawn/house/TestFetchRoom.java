@@ -10,8 +10,8 @@ import java.util.List;
 public class TestFetchRoom {
     public static void main(String[] args) throws IOException {
         RoomReq roomReq = new RoomReq();
-        roomReq.setDengJh("黄1800294");
-        roomReq.setHouseDengJh("黄0008419");
+        roomReq.setDengJh("湖1800071");
+        roomReq.setHouseDengJh("湖0007424");
         List<RoomEntity> list = RoomParse.parse(roomReq.getDocument(),roomReq.getHouseDengJh());
     }
 }
