@@ -1,8 +1,8 @@
 package com.shawn.house;
 
-import com.shawn.house.engine.parse.BuildingParse;
-import com.shawn.house.engine.req.BuildingReq;
-import com.shawn.house.web.entity.BuildingEntity;
+import com.shawn.house.v1.engine.parse.BuildingParse;
+import com.shawn.house.v1.engine.req.BuildingReq;
+import com.shawn.house.v1.web.entity.BuildingEntity;
 
 import java.io.IOException;
 import java.util.List;

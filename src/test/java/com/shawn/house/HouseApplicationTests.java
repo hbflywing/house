@@ -1,11 +1,11 @@
 package com.shawn.house;
 
-import com.shawn.house.engine.queue.BlockingQueueRoom;
-import com.shawn.house.job.BuildingJob;
-import com.shawn.house.job.ProjectJob;
-import com.shawn.house.job.RoomJob;
-import com.shawn.house.web.dao.RoomJPA;
-import com.shawn.house.web.entity.RoomEntity;
+import com.shawn.house.v1.engine.queue.BlockingQueueRoom;
+import com.shawn.house.v1.job.BuildingJob;
+import com.shawn.house.v1.job.ProjectJob;
+import com.shawn.house.v1.job.RoomJob;
+import com.shawn.house.v1.web.dao.RoomJPA;
+import com.shawn.house.v1.web.entity.RoomEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

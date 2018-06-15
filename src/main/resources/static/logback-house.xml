@@ -45,21 +45,20 @@
 	</appender>
 
 
-	<logger name="com.shawn.house.engine.req" level="error">
+	<logger name="com.shawn.house.v1.engine.req" level="error">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="QUERY_FILE" />
 	</logger>
 
-	<logger name="com.shawn.house.engine.parse" level="error">
+	<logger name="com.shawn.house.v1.engine.parse" level="error">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="PARSE_FILE" />
 	</logger>
 
-	<logger name="com.shawn.house.engine.queue" level="info">
+	<logger name="com.shawn.house.v1.engine.queue" level="info">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="QUEUE_FILE" />
 	</logger>
-
 
 	<root level="info">
 		<appender-ref ref="CONSOLE" />
